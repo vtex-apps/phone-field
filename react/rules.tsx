@@ -17,7 +17,7 @@ const defaultRules: PhoneRuleDescriptor[] = [
   {
     countryCode: '55',
     countryISO: 'BRA',
-    mask: '(99) 9999-9999',
+    mask: '(99) 9 9999-9999',
   },
   {
     countryCode: '54',
