@@ -1,0 +1,8 @@
+.phoneField :global(.vtex-input__prefix) {
+  padding-left: 0;
+}
+
+.phoneField :global(.vtex-input) input {
+  width: auto;
+  flex: 1;
+}
