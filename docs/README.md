@@ -83,6 +83,9 @@ Responsible for rendering the listbox with the text field and formatting and val
 
 #### Props
 
+The `PhoneField` component also accepts all props of [Styleguide's `Input`](https://styleguide.vtex.com/#/Components/Forms/Input),
+except for the `value` and `onChange`, which are redefined by this component.
+
 | Prop name | type | Required |
 | --- | --- | --- |
 | [`value`](#phonefield-value) | `string` | `true` |
