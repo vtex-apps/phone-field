@@ -3,3 +3,8 @@ declare module '*.svg' {
 
   export default url
 }
+
+declare module '*.css' {
+  const styles: { [name: string]: string }
+  export default styles
+}
