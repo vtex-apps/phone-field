@@ -74,7 +74,8 @@ const rule = {
 ```
 
 The component will look for a flag named `BRA.svg` inside the `react/icons` folder of the app and
-render it.
+render it. If the component doesn't find the flag of the country, it will use a default gray flag as
+a placeholder.
 
 ## Components
 
