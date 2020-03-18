@@ -51,7 +51,12 @@ const renderCountryFlagWithCode = ({
   code: string
 }) => (
   <>
-    <img src={flags[country]} width="24" height="24" alt="" />
+    <img
+      src={flags[country] ?? flags.placeholder}
+      width="24"
+      height="24"
+      alt=""
+    />
     <span className="dib ml3">+{code}</span>
   </>
 )

@@ -206,6 +206,7 @@ import YEM from './icons/YEM.svg'
 import ZAF from './icons/ZAF.svg'
 import ZMB from './icons/ZMB.svg'
 import ZWE from './icons/ZWE.svg'
+import placeholder from './icons/placeholder-flag.svg'
 
 const flags: { [country: string]: string } = {
   AFG,
@@ -416,6 +417,7 @@ const flags: { [country: string]: string } = {
   ZAF,
   ZMB,
   ZWE,
+  placeholder,
 }
 
 export default flags
