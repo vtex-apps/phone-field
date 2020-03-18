@@ -4,8 +4,8 @@ Phone Field is a VTEX IO app that handles formatting and validation of phone num
 includes an UI component that renders a text field with a listbox that contains the flag of
 the country and the respective [country calling code](https://en.wikipedia.org/wiki/List_of_country_calling_codes).
 
-<img width="410" alt="Screen Shot 2020-03-17 at 18 53 14" src="https://user-images.githubusercontent.com/10223856/76907907-33ab6b80-6886-11ea-9ca5-4d9a4c37c843.png">
-<img width="405" alt="Screen Shot 2020-03-17 at 19 32 35" src="https://user-images.githubusercontent.com/10223856/76907932-3efe9700-6886-11ea-8b01-1c81ce31a339.png">
+<img width="405" alt="component screenshot USA" src="https://user-images.githubusercontent.com/10223856/76995145-306bba80-692e-11ea-9f3b-847627dfc49f.png">
+<img width="405" alt="component screenshot Brazil" src="https://user-images.githubusercontent.com/10223856/76907932-3efe9700-6886-11ea-8b01-1c81ce31a339.png">
 
 ## Usage
 
