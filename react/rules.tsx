@@ -4,11 +4,11 @@ export interface PhoneRuleDescriptor {
    */
   countryISO: string
   /**
-   * Country's international code number. E.g.: 55 for Brazil
+   * Country's international code number. E.g.: "55" for Brazil
    */
   countryCode: string
   /**
-   * Mask to the phone. E.g.: (99) 9999-9999[9]
+   * Mask to the phone. E.g.: "(99) 9 9999-9999"
    */
   mask?: string
 }
