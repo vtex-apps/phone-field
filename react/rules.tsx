@@ -27,7 +27,7 @@ const defaultRules: PhoneRuleDescriptor[] = [
   {
     countryCode: '1',
     countryISO: 'USA',
-    mask: '999 9999999',
+    mask: '999-999-9999',
   },
 ]
 
