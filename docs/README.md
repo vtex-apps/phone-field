@@ -49,7 +49,7 @@ const Form: React.FC = () => {
 }
 ```
 
-You migh be wondering, _what is that `rules` variable?_ And there is a few reasons that it and the
+You might be wondering, _what is that `rules` variable?_ And there is a few reasons that it and the
 phone context exists.
 
 The rules variable includes all default rules that exist inside the `vtex.phone-field` app, but the
