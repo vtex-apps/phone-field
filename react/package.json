@@ -6,6 +6,7 @@
     "test": "vtex-test-tools test"
   },
   "devDependencies": {
+    "@apollo/react-testing": "^3.1.3",
     "@types/classnames": "^2.2.10",
     "@types/jest": "^25.1.4",
     "@vtex/styleguide": "^9.112.20",
@@ -19,6 +20,7 @@
     "@types/react": "^16.9.23",
     "classnames": "^2.2.6",
     "msk": "^1.0.5",
-    "react": "^16.13.0"
+    "react": "^16.13.0",
+    "react-intl": "^3.12.1"
   }
 }
