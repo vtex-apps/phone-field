@@ -59,7 +59,8 @@ country calling code. This is used by the component to mask the number correctly
 
 The phone context exists so we can decouple the rules definition of the component itself. If you ever
 want to include a rule that our app doesn't natively support yet, you can pass it to the `rules` prop
-of the `PhoneContextProvider` component. If you have any problems with that, please [open an issue](https://github.com/vtex-apps/phone-field/issues/new)!
+of the `PhoneContextProvider` component. If you have any problems with that, please
+[open an issue](https://github.com/vtex-apps/phone-field/issues/new/choose)!
 
 The country flags are all inside the app for now, and the `PhoneField` component is rendering them based on
 the country ISO of the rule. For example, given the following rule:
