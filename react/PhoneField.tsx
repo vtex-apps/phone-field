@@ -125,6 +125,7 @@ const PhoneField: React.FC<Props> = ({
     <div className={styles.phoneField}>
       <Input
         {...props}
+        inputMode="numeric"
         value={msk(phoneData.phoneValue, countryRule.mask ?? '')}
         onChange={handleChange}
         prefix={
