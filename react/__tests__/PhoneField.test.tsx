@@ -120,7 +120,7 @@ describe('<PhoneField />', () => {
       expect(getByRole('img')).toHaveAttribute('src', 'BRA.svg')
     })
 
-    it('should correctly change the mask with country change', () => {
+    it('should correctly apply the USA mask with country change', () => {
       const Component: React.FC = () => {
         const [phone, setPhone] = useState('+5511999998888')
 
@@ -135,7 +135,7 @@ describe('<PhoneField />', () => {
         )
       }
 
-      const { getByRole } = render(<Component />)
+      const { getByRole, getByLabelText } = render(<Component />)
 
       const listboxButton = getByRole('button')
 
@@ -145,7 +145,7 @@ describe('<PhoneField />', () => {
 
       act(() => void fireMouseClick(usaOption))
 
-      const phoneInput = getByRole('textbox')
+      const phoneInput = getByLabelText(/phone number/i)
 
       expect(phoneInput).toHaveValue('119-999-9888')
     })
