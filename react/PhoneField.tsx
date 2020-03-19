@@ -104,7 +104,7 @@ const PhoneField: React.FC<Props> = ({
     const updatedValue = rule.mask ? msk.fit(phone, rule.mask) : phone
 
     onChange({
-      value: `+${rule.countryCode}${updatedValue}`,
+      value: `+${rule.countryCode}${unmaskPhone(updatedValue)}`,
       isValid: !rule.mask || rule.mask.length === updatedValue.length,
     })
   }
