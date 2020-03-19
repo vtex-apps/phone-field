@@ -14,6 +14,14 @@ function fireMouseClick(element: HTMLElement) {
 }
 
 describe('<PhoneField />', () => {
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
+
   it('should correctly mask a phone number given a rule', () => {
     const rules: PhoneRuleDescriptor[] = [
       {
@@ -60,6 +68,41 @@ describe('<PhoneField />', () => {
 
     // the value shouldn't change as we have exceeded the mask
     expect(phoneInput).toHaveValue('456 789 0-1')
+  })
+
+  it('should focus the input button on flag change', () => {
+    const Component: React.FC = () => {
+      const [phone, setPhone] = useState('+5511999998888')
+
+      return (
+        <PhoneContextProvider rules={defaultRules}>
+          <PhoneField
+            label="Phone number"
+            value={phone}
+            onChange={({ value }) => setPhone(value)}
+          />
+        </PhoneContextProvider>
+      )
+    }
+
+    const { getByRole, getByLabelText } = render(<Component />)
+
+    const phoneInput = getByLabelText(/phone number/i)
+
+    expect(document.activeElement).not.toBe(phoneInput)
+
+    const listboxButton = getByRole('button')
+
+    act(() => void fireMouseClick(listboxButton))
+
+    const usaOption = getByRole('option', { name: '+ 1' })
+
+    act(() => {
+      fireMouseClick(usaOption)
+      jest.runAllTimers()
+    })
+
+    expect(document.activeElement).toBe(phoneInput)
   })
 
   describe('default rules', () => {

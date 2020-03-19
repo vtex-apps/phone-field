@@ -1,5 +1,5 @@
 import msk from 'msk'
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { Input } from 'vtex.styleguide'
 
 import {
@@ -70,6 +70,7 @@ const PhoneField: React.FC<Props> = ({
   ...props
 }) => {
   const { rules } = usePhoneContext()
+  const inputRef = useRef<HTMLInputElement>()
 
   const phoneData = useMemo(() => {
     let phoneValue = value
@@ -119,6 +120,11 @@ const PhoneField: React.FC<Props> = ({
     const newRule = rules.find(({ countryISO }) => countryISO === country)!
 
     updatePhone(phoneData.phoneValue, newRule)
+
+    // schedule focus for the next tick since the listbox
+    // is already focused by default after this event handler,
+    // and we need to override that
+    setTimeout(() => void inputRef.current?.focus(), 0)
   }
 
   return (
@@ -128,6 +134,7 @@ const PhoneField: React.FC<Props> = ({
         inputMode="numeric"
         value={msk(phoneData.phoneValue, countryRule.mask ?? '')}
         onChange={handleChange}
+        ref={inputRef}
         prefix={
           <ListboxInput
             className="h-100 flex-auto"
