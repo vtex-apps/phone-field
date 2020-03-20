@@ -140,11 +140,12 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
               if (typeof ref === 'function') {
                 ref(node)
               } else {
-                // @ts-ignore: not read-only
+                // @ts-ignore: React TS types says this is read-only, but
+                // it its possible to mutate this value
                 ref.current = node
               }
             }
-            // @ts-ignore: not read-only
+            // @ts-ignore: same as above
             inputRef.current = node
           }}
           prefix={
