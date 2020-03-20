@@ -35,12 +35,21 @@ interface PhoneData {
   isValid: boolean
 }
 
-interface Props {
+interface Props
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'onChange' | 'value'
+  > {
   onChange?: (data: PhoneData) => void
   value?: string
   defaultCountry?: string
-  // Input props which don't have a TS definition
-  [key: string]: any
+  // Input's props
+  label?: string | React.ReactElement
+  error?: boolean
+  errorMessage?: boolean
+  helpText?: React.ReactNode
+  suffix?: React.ReactNode
+  isLoadingButton?: boolean
 }
 
 const renderCountryFlagWithCode = ({
