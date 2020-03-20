@@ -46,7 +46,7 @@ interface Props
   // Input's props
   label?: string | React.ReactElement
   error?: boolean
-  errorMessage?: boolean
+  errorMessage?: string
   helpText?: React.ReactNode
   suffix?: React.ReactNode
   isLoadingButton?: boolean
