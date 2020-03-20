@@ -63,12 +63,10 @@ const renderCountryFlagWithCode = ({
 
 const unmaskPhone = (phone: string) => phone.replace(/\D/g, '')
 
-const PhoneField: React.FC<Props> = ({
-  onChange = () => {},
-  value = '',
-  defaultCountry = 'BRA',
-  ...props
-}) => {
+const PhoneField: React.ForwardRefRenderFunction<HTMLInputElement, Props> = (
+  { onChange = () => {}, value = '', defaultCountry = 'BRA', ...props },
+  ref
+) => {
   const { rules } = usePhoneContext()
   const inputRef = useRef<HTMLInputElement>()
 
@@ -134,7 +132,17 @@ const PhoneField: React.FC<Props> = ({
         inputMode="numeric"
         value={msk(phoneData.phoneValue, countryRule.mask ?? '')}
         onChange={handleChange}
-        ref={inputRef}
+        ref={(node: HTMLInputElement) => {
+          if (typeof ref === 'function') {
+            ref(node)
+          } else if (ref != null) {
+            // @ts-ignore: React TS types says this is read-only, but
+            // it its possible to mutate this value
+            ref.current = node
+          }
+
+          inputRef.current = node
+        }}
         prefix={
           <ListboxInput
             className="h-100 flex-auto"
