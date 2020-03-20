@@ -79,7 +79,7 @@ a placeholder.
 
 ## Components
 
-### PhoneField component
+### PhoneField
 
 Responsible for rendering the listbox with the text field and formatting and validating the phone number.
 
@@ -114,7 +114,7 @@ or by changing the country from the listbox.
 The default country to show in the listbox. Used only when the phone number passed in `value`
 doesn't have a country calling code or if we don't have a `value` at all.
 
-### PhoneContext.PhoneContextProvider component
+### PhoneContext.PhoneContextProvider
 
 The wrapper component for the phone number that provides the rules definitions.
 
