@@ -1,5 +1,5 @@
 import { render, fireEvent, act } from '@vtex/test-tools/react'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import PhoneField from '../PhoneField'
 import defaultRules, { PhoneRuleDescriptor } from '../rules'
@@ -103,6 +103,32 @@ describe('<PhoneField />', () => {
     })
 
     expect(document.activeElement).toBe(phoneInput)
+  })
+
+  it('should be able to accept refs in phone field', () => {
+    let ref = null
+
+    const Component: React.FC = () => {
+      const inputRef = useRef<HTMLInputElement>(null)
+
+      useEffect(() => {
+        ref = inputRef.current
+      })
+
+      return (
+        <PhoneContextProvider rules={defaultRules}>
+          <PhoneField
+            label="Phone number"
+            value="+5511999998888"
+            ref={inputRef}
+          />
+        </PhoneContextProvider>
+      )
+    }
+
+    const { getByLabelText } = render(<Component />)
+
+    expect(ref).toBe(getByLabelText(/phone number/i))
   })
 
   describe('default rules', () => {
