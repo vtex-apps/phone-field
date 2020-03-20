@@ -23,11 +23,11 @@ To use this app, you first need to add it in your `manifest.json` file, like so
 
 Then, you can import the phone context and field components and use it inside your forms:
 
-```tsx
+```jsx
 import React from 'react'
 import { PhoneField, PhoneContext, rules } from 'vtex.phone-field'
 
-const Form: React.FC = () => {
+const Form = () => {
   const [phone, setPhone] = React.useState('+15554567038')
 
   const handlePhoneChange = React.useCallback(({ value, isValid }) => {
@@ -79,7 +79,7 @@ a placeholder.
 
 ## Components
 
-### `<PhoneField />`
+### PhoneField component
 
 Responsible for rendering the listbox with the text field and formatting and validating the phone number.
 
@@ -114,7 +114,7 @@ or by changing the country from the listbox.
 The default country to show in the listbox. Used only when the phone number passed in `value`
 doesn't have a country calling code or if we don't have a `value` at all.
 
-### `<PhoneContext.PhoneContextProvider />`
+### PhoneContext.PhoneContextProvider component
 
 The wrapper component for the phone number that provides the rules definitions.
 
