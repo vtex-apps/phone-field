@@ -133,7 +133,11 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
         <Input
           {...props}
           inputMode="numeric"
-          value={msk(phoneData.phoneValue, countryRule.mask ?? '')}
+          value={
+            countryRule.mask
+              ? msk(phoneData.phoneValue, countryRule.mask)
+              : phoneData.phoneValue
+          }
           onChange={handleChange}
           ref={(node: HTMLInputElement) => {
             if (ref) {

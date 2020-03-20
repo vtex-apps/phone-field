@@ -131,6 +131,29 @@ describe('<PhoneField />', () => {
     expect(ref).toBe(getByLabelText(/phone number/i))
   })
 
+  it("should show phone number when rule don't have a mask", () => {
+    const rules = [
+      {
+        countryISO: 'ABC',
+        countryCode: '1',
+      },
+    ]
+
+    const Component: React.FC = () => {
+      return (
+        <PhoneContextProvider rules={rules}>
+          <PhoneField label="Phone number" value="+1123456" />
+        </PhoneContextProvider>
+      )
+    }
+
+    const { getByLabelText } = render(<Component />)
+
+    const phoneInput = getByLabelText(/phone number/i)
+
+    expect(phoneInput).toHaveValue('123456')
+  })
+
   describe('default rules', () => {
     it('should correctly render the flag from the phone number', () => {
       const Component: React.FC = () => {
