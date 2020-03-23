@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2020-03-23
+
 ### Fixed
 
 - Listbox button shrinking due to `Input`'s width.
