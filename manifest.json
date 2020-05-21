@@ -9,6 +9,7 @@
     "react": "3.x"
   },
   "dependencies": {
+    "vtex.country-flags": "0.x",
     "vtex.styleguide": "9.x"
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"

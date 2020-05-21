@@ -1,6 +1,7 @@
 import msk from 'msk'
 import React, { useMemo, useRef } from 'react'
 import { Input } from 'vtex.styleguide'
+import { CountryFlag } from 'vtex.country-flags'
 
 import {
   ListboxInput,
@@ -9,7 +10,6 @@ import {
   ListboxList,
   ListboxOption,
 } from './components/Listbox'
-import flags from './flags'
 import { usePhoneContext } from './PhoneContext'
 import styles from './PhoneField.css'
 import { PhoneRuleDescriptor } from './rules'
@@ -60,12 +60,7 @@ const renderCountryFlagWithCode = ({
   code: string
 }) => (
   <>
-    <img
-      src={flags[country] ?? flags.placeholder}
-      width="24"
-      height="24"
-      alt=""
-    />
+    <CountryFlag iso3={country} />
     <span className="dib ml3">+{code}</span>
   </>
 )
