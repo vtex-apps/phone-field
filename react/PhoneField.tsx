@@ -16,22 +16,6 @@ const {
   ListboxOption,
 } = Listbox
 
-const ArrowDownIcon: React.FC<{ size?: number; color?: string }> = ({
-  size = 16,
-  color = 'currentColor',
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-  >
-    <g fill={color}>
-      <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
-    </g>
-  </svg>
-)
-
 interface PhoneData {
   value: string
   isValid: boolean
@@ -164,13 +148,7 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
               value={phoneData.selectedCountry}
               onChange={handleCountryUpdate}
             >
-              <ListboxButton
-                arrow={
-                  <div className="c-action-primary flex items-center ml2">
-                    <ArrowDownIcon size={16} />
-                  </div>
-                }
-              >
+              <ListboxButton>
                 {({ label }) =>
                   renderCountryFlagWithCode({
                     country: phoneData.selectedCountry,
