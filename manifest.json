@@ -9,6 +9,7 @@
     "react": "3.x"
   },
   "dependencies": {
+    "vtex.checkout-components": "0.x",
     "vtex.country-flags": "0.x",
     "vtex.styleguide": "9.x"
   },

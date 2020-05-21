@@ -1,18 +1,20 @@
 import msk from 'msk'
 import React, { useMemo, useRef } from 'react'
 import { Input } from 'vtex.styleguide'
+import { Listbox } from 'vtex.checkout-components'
 import { CountryFlag } from 'vtex.country-flags'
 
-import {
+import { usePhoneContext } from './PhoneContext'
+import styles from './PhoneField.css'
+import { PhoneRuleDescriptor } from './rules'
+
+const {
   ListboxInput,
   ListboxButton,
   ListboxPopover,
   ListboxList,
   ListboxOption,
-} from './components/Listbox'
-import { usePhoneContext } from './PhoneContext'
-import styles from './PhoneField.css'
-import { PhoneRuleDescriptor } from './rules'
+} = Listbox
 
 const ArrowDownIcon: React.FC<{ size?: number; color?: string }> = ({
   size = 16,
