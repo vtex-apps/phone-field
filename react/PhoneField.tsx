@@ -52,6 +52,22 @@ const renderCountryFlagWithCode = ({
   </>
 )
 
+const ArrowDownIcon: React.FC<{ size?: number; color?: string }> = ({
+  size = 16,
+  color = 'currentColor',
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+  >
+    <g fill={color}>
+      <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
+    </g>
+  </svg>
+)
+
 const unmaskPhone = (phone: string) => phone.replace(/\D/g, '')
 
 const PhoneField = React.forwardRef<HTMLInputElement, Props>(
@@ -151,6 +167,11 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
             >
               <ListboxButton
                 className={classnames(styles.listboxButton, 'bt-0 bl-0 bb-0')}
+                arrow={
+                  <div className="c-action-primary flex items-center ml2">
+                    <ArrowDownIcon />
+                  </div>
+                }
               >
                 {({ label }) =>
                   renderCountryFlagWithCode({
