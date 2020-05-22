@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import msk from 'msk'
 import React, { useMemo, useRef } from 'react'
 import { Input } from 'vtex.styleguide'
@@ -148,7 +149,9 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
               value={phoneData.selectedCountry}
               onChange={handleCountryUpdate}
             >
-              <ListboxButton>
+              <ListboxButton
+                className={classnames(styles.listboxButton, 'bt-0 bl-0 bb-0')}
+              >
                 {({ label }) =>
                   renderCountryFlagWithCode({
                     country: phoneData.selectedCountry,
