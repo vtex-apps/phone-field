@@ -111,20 +111,26 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
           ({ countryISO }) => countryISO === phoneData.selectedCountry
         ),
       [rules, phoneData.selectedCountry]
-    )!
+    )
 
     const updatePhone = (phone: string, rule: PhoneRuleDescriptor) => {
       const updatedValue = rule.mask ? msk.fit(phone, rule.mask) : phone
 
       onChange({
         value: `+${rule.countryCode}${unmaskPhone(updatedValue)}`,
-        isValid: !rule.mask || rule.mask.length === updatedValue.length,
+        isValid: !rule.mask
+          ? updatedValue.length > 0
+          : rule.mask.length === updatedValue.length,
       })
     }
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
       target: { value: eventValue },
     }) => {
+      if (!countryRule) {
+        return
+      }
+
       updatePhone(eventValue, countryRule)
     }
 
@@ -184,7 +190,7 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
           disabled={inputDisabled}
           inputMode="numeric"
           value={
-            countryRule.mask
+            countryRule?.mask
               ? msk(phoneData.phoneValue, countryRule.mask)
               : phoneData.phoneValue
           }
