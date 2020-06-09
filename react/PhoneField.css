@@ -4,6 +4,15 @@
 
 .phoneField :global(.vtex-input__prefix) {
   flex-shrink: 0;
+  padding-right: 0;
+}
+
+.phoneField :global(.vtex-input) input {
+  padding-right: .5rem;
+  padding-left: 1rem;
+  flex: 1;
+  width: auto;
+  min-width: 0;
 }
 
 .listboxButton {

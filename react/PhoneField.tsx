@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import msk from 'msk'
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { Input } from 'vtex.styleguide'
 import { Listbox } from 'vtex.checkout-components'
 import { CountryFlag } from 'vtex.country-flags'
@@ -44,11 +44,11 @@ const renderCountryFlagWithCode = ({
   code,
 }: {
   country: string
-  code: string
+  code?: string
 }) => (
   <>
     <CountryFlag iso3={country} />
-    <span className="dib ml3">+{code}</span>
+    {code && <span className="dib ml3">+{code}</span>}
   </>
 )
 
@@ -77,6 +77,10 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
   ) {
     const { rules } = usePhoneContext()
     const inputRef = useRef<HTMLInputElement>(null)
+
+    const [inputHovered, setInputHovered] = useState(false)
+    const [inputFocused, setInputFocused] = useState(false)
+    const [hovered, setHovered] = useState(false)
 
     const phoneData = useMemo(() => {
       let phoneValue = value
@@ -135,10 +139,49 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
       setTimeout(() => void inputRef.current?.focus(), 0)
     }
 
+    const handleInputMouseEnter: React.MouseEventHandler<HTMLInputElement> = evt => {
+      setInputHovered(true)
+      props.onMouseEnter?.(evt)
+    }
+
+    const handleInputMouseLeave: React.MouseEventHandler<HTMLInputElement> = evt => {
+      setInputHovered(false)
+      props.onMouseLeave?.(evt)
+    }
+
+    const handleInputFocus: React.FocusEventHandler<HTMLInputElement> = evt => {
+      setInputFocused(true)
+      props.onFocus?.(evt)
+    }
+
+    const handleInputBlur: React.FocusEventHandler<HTMLInputElement> = evt => {
+      setInputFocused(false)
+      props.onBlur?.(evt)
+    }
+
+    const handleMouseEnter = () => {
+      setHovered(true)
+    }
+
+    const handleMouseLeave = () => {
+      setHovered(false)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const hasError = !!(props.error || props.errorMessage)
+
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const inputDisabled = props.disabled || !countryRule
+
     return (
       <div className={styles.phoneField}>
         <Input
           {...props}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onMouseEnter={handleInputMouseEnter}
+          onMouseLeave={handleInputMouseLeave}
+          disabled={inputDisabled}
           inputMode="numeric"
           value={
             countryRule.mask
@@ -164,14 +207,25 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
               className="h-100 flex-auto"
               value={phoneData.selectedCountry}
               onChange={handleCountryUpdate}
+              disabled={inputDisabled}
             >
               <ListboxButton
-                className={classnames(styles.listboxButton, 'bt-0 bl-0 bb-0')}
+                className={classnames(styles.listboxButton, 'br bw1 br-2', {
+                  'b--danger': hasError,
+                  'b--muted-4':
+                    !(hovered || inputHovered || inputFocused) && !hasError,
+                  'b--muted-3':
+                    (hovered || inputHovered) && !inputFocused && !hasError,
+                  'b--muted-2': inputFocused && !hasError,
+                })}
+                plain
                 arrow={
                   <div className="c-action-primary flex items-center ml2">
                     <ArrowDownIcon />
                   </div>
                 }
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 {({ label }) =>
                   renderCountryFlagWithCode({
