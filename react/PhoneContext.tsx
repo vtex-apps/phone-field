@@ -26,8 +26,12 @@ export const PhoneContextProvider: React.FC<Context> = ({
 }) => {
   const contextValue = useMemo(
     () => ({
-      rules: rules.sort(
-        (ruleA, ruleB) => +ruleA.countryCode - +ruleB.countryCode
+      rules: rules.sort((ruleA, ruleB) =>
+        ruleA.countryISO > ruleB.countryISO
+          ? 1
+          : ruleA.countryISO < ruleB.countryISO
+          ? -1
+          : 0
       ),
     }),
     [rules]
