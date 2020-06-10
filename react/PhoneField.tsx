@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import msk from 'msk'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import { Input } from 'vtex.styleguide'
 import { Listbox } from 'vtex.checkout-components'
 import { CountryFlag } from 'vtex.country-flags'
@@ -84,12 +84,14 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
 
     const phoneData = useMemo(() => {
       let phoneValue = value
-      let selectedCountry = defaultCountry
+      let selectedCountry = !value ? defaultCountry : ''
 
       if (value.startsWith('+')) {
-        phoneValue = unmaskPhone(value.substr(1))
+        phoneValue = value.substr(1)
+        const unmaskedPhone = unmaskPhone(phoneValue)
+
         const phoneRule = rules.find(({ countryCode }) => {
-          return phoneValue.startsWith(countryCode)
+          return unmaskedPhone.startsWith(countryCode)
         })
 
         if (phoneRule) {
@@ -111,16 +113,33 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
       [rules, phoneData.selectedCountry]
     )
 
-    const updatePhone = (phone: string, rule: PhoneRuleDescriptor) => {
-      const updatedValue = rule.mask ? msk.fit(phone, rule.mask) : phone
+    const onChangeRef = useRef(onChange)
 
-      onChange({
-        value: `+${rule.countryCode}${unmaskPhone(updatedValue)}`,
-        isValid: !rule.mask
-          ? updatedValue.length > 0
-          : rule.mask.length === updatedValue.length,
-      })
-    }
+    useEffect(() => {
+      onChangeRef.current = onChange
+    }, [onChange])
+
+    const updatePhone = useCallback(
+      (phone: string, rule: PhoneRuleDescriptor) => {
+        onChangeRef.current({
+          value: `+${rule.countryCode}${phone}`,
+          isValid: !rule.mask
+            ? phone.length > 0
+            : rule.mask.length === msk.fit(phone, rule.mask).length,
+        })
+      },
+      []
+    )
+
+    useEffect(() => {
+      if (inputFocused || !countryRule || !countryRule.mask) {
+        return
+      }
+
+      const phone = msk(phoneData.phoneValue, countryRule.mask)
+
+      updatePhone(phone, countryRule)
+    }, [phoneData.phoneValue, countryRule, inputFocused, updatePhone])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
       target: { value: eventValue },
@@ -187,11 +206,7 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
           onMouseLeave={handleInputMouseLeave}
           disabled={inputDisabled}
           inputMode="numeric"
-          value={
-            countryRule?.mask
-              ? msk(phoneData.phoneValue, countryRule.mask)
-              : phoneData.phoneValue
-          }
+          value={phoneData.phoneValue}
           onChange={handleChange}
           ref={(node: HTMLInputElement) => {
             if (ref) {

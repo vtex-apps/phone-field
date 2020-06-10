@@ -5481,6 +5481,10 @@ vtex-tachyons@^3.2.0:
   version "0.4.0"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-components@0.4.0/public/@types/vtex.checkout-components#e944338bd1d7acaee7e32dacb0ffd2bc45aa5c9b"
 
+"vtex.country-flags@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-flags@0.1.1/public/@types/vtex.country-flags":
+  version "0.1.1"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-flags@0.1.1/public/@types/vtex.country-flags#90f42d100c364aa8b549bd8b8c88c8dc9550686a"
+
 "vtex.render-runtime@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.104.3/public/@types/vtex.render-runtime":
   version "8.104.3"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.104.3/public/@types/vtex.render-runtime#a5f07af601a8121c7fd25980b8e17f5eb87586bd"

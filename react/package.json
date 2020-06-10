@@ -15,6 +15,7 @@
     "@vtex/styleguide": "^9.112.20",
     "@vtex/test-tools": "^3.0.3",
     "vtex.checkout-components": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-components@0.4.0/public/@types/vtex.checkout-components",
+    "vtex.country-flags": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-flags@0.1.1/public/@types/vtex.country-flags",
     "vtex.render-runtime": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.104.3/public/@types/vtex.render-runtime",
     "vtex.styleguide": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.styleguide@9.120.1/public/@types/vtex.styleguide"
   },
