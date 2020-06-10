@@ -55,19 +55,67 @@ describe('<PhoneField />', () => {
     const phoneInput = getByRole('textbox')
     const listboxButton = getByRole('button')
 
+    fireEvent.focus(phoneInput)
+
     fireEvent.change(phoneInput, { target: { value: '4567' } })
 
     expect(listboxButton).toHaveTextContent('+123')
-    expect(phoneInput).toHaveValue('456 7')
+
+    expect(phoneInput).toHaveValue('4567')
 
     fireEvent.change(phoneInput, { target: { value: '45678901' } })
 
-    expect(phoneInput).toHaveValue('456 789 0-1')
+    expect(phoneInput).toHaveValue('45678901')
 
     fireEvent.change(phoneInput, { target: { value: '456789012' } })
 
-    // the value shouldn't change as we have exceeded the mask
-    expect(phoneInput).toHaveValue('456 789 0-1')
+    fireEvent.blur(phoneInput)
+
+    expect(phoneInput).toHaveValue('456 789 0-12')
+  })
+
+  it('should show error message for invalid phones', () => {
+    const Component: React.FC = () => {
+      const [phone, setPhone] = useState('')
+      const [valid, setValid] = useState(false)
+
+      const handlePhoneChange = ({
+        value,
+        isValid,
+      }: {
+        value: string
+        isValid: boolean
+      }) => {
+        setPhone(value)
+        setValid(isValid)
+      }
+
+      return (
+        <PhoneContextProvider rules={defaultRules}>
+          <PhoneField
+            label="Phone number"
+            value={phone}
+            defaultCountry="BRA"
+            onChange={handlePhoneChange}
+          />
+          {!valid && <span>Phone is invalid</span>}
+        </PhoneContextProvider>
+      )
+    }
+
+    const { getByRole, queryByText } = render(<Component />)
+
+    const phoneInput = getByRole('textbox')
+
+    expect(queryByText(/phone is invalid/i)).toBeInTheDocument()
+
+    fireEvent.change(phoneInput, { target: { value: '21988884444' } })
+
+    expect(queryByText(/phone is invalid/i)).not.toBeInTheDocument()
+
+    fireEvent.change(phoneInput, { target: { value: '219888844443' } })
+
+    expect(queryByText(/phone is invalid/i)).toBeInTheDocument()
   })
 
   it('should focus the input button on flag change', () => {
@@ -155,36 +203,27 @@ describe('<PhoneField />', () => {
   })
 
   describe('default rules', () => {
-    it('should correctly render the flag from the phone number', () => {
-      const Component: React.FC = () => {
-        return (
-          <PhoneContextProvider rules={defaultRules}>
-            <PhoneField label="Phone number" value="+5511999998888" />
-          </PhoneContextProvider>
-        )
-      }
-
-      const { getByRole } = render(<Component />)
-
-      expect(getByRole('img')).toHaveAttribute('src', 'BRA.svg')
-    })
-
     it('should correctly apply the USA mask with country change', () => {
       const Component: React.FC = () => {
         const [phone, setPhone] = useState('+5511999998888')
+        const [valid, setValid] = useState(true)
 
         return (
           <PhoneContextProvider rules={defaultRules}>
             <PhoneField
               label="Phone number"
               value={phone}
-              onChange={({ value }) => setPhone(value)}
+              onChange={({ value, isValid }) => {
+                setPhone(value)
+                setValid(isValid)
+              }}
             />
+            {!valid && <span>Phone is invalid</span>}
           </PhoneContextProvider>
         )
       }
 
-      const { getByRole, getByLabelText } = render(<Component />)
+      const { getByRole, getByLabelText, getByText } = render(<Component />)
 
       const listboxButton = getByRole('button')
 
@@ -196,7 +235,11 @@ describe('<PhoneField />', () => {
 
       const phoneInput = getByLabelText(/phone number/i)
 
-      expect(phoneInput).toHaveValue('119-999-9888')
+      expect(phoneInput).toHaveValue('119-999-98888')
+
+      const errorMessage = getByText(/phone is invalid/i)
+
+      expect(errorMessage).toBeInTheDocument()
     })
   })
 })

@@ -125,7 +125,7 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
           value: `+${rule.countryCode}${phone}`,
           isValid: !rule.mask
             ? phone.length > 0
-            : rule.mask.length === msk.fit(phone, rule.mask).length,
+            : rule.mask.length === msk(phone, rule.mask).length,
         })
       },
       []
@@ -136,7 +136,7 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
         return
       }
 
-      const phone = msk(phoneData.phoneValue, countryRule.mask)
+      const phone = msk(unmaskPhone(phoneData.phoneValue), countryRule.mask)
 
       updatePhone(phone, countryRule)
     }, [phoneData.phoneValue, countryRule, inputFocused, updatePhone])
