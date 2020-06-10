@@ -224,7 +224,7 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
                     (hovered || inputHovered) && !inputFocused && !hasError,
                   'b--muted-2': inputFocused && !hasError,
                 })}
-                plain
+                variation="plain"
                 arrow={
                   <div className="c-action-primary flex items-center ml2">
                     <ArrowDownIcon />
@@ -240,7 +240,10 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
                   })
                 }
               </ListboxButton>
-              <ListboxPopover className="nl1" style={{ minWidth: 192 }}>
+              <ListboxPopover
+                className="nl1"
+                style={{ minWidth: 192, maxHeight: 200 }}
+              >
                 <ListboxList>
                   {rules.map(({ countryCode, countryISO }) => {
                     return (
