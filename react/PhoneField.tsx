@@ -92,12 +92,10 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
           return phoneValue.startsWith(countryCode)
         })
 
-        if (!phoneRule) {
-          throw new Error(`Unsupported phone number ${value}.`)
+        if (phoneRule) {
+          selectedCountry = phoneRule.countryISO
+          phoneValue = phoneValue.substr(phoneRule.countryCode.length)
         }
-
-        selectedCountry = phoneRule.countryISO
-        phoneValue = phoneValue.substr(phoneRule.countryCode.length)
       } else {
         phoneValue = unmaskPhone(value)
       }
