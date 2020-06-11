@@ -121,11 +121,11 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
 
     const updatePhone = useCallback(
       (phone: string, rule: PhoneRuleDescriptor) => {
+        const unmaskedValue = `+${rule.countryCode}${unmaskPhone(phone)}`
+
         onChangeRef.current({
           value: `+${rule.countryCode}${phone}`,
-          isValid: !rule.mask
-            ? phone.length > 0
-            : rule.mask.length === msk(phone, rule.mask).length,
+          isValid: !!unmaskedValue.match(rule.pattern),
         })
       },
       []

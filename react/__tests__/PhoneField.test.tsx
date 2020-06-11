@@ -28,6 +28,7 @@ describe('<PhoneField />', () => {
         countryISO: 'ABC',
         countryCode: '123',
         mask: '999 999 9-9',
+        pattern: '\\d{8}',
       },
     ]
 
@@ -153,6 +154,57 @@ describe('<PhoneField />', () => {
     expect(document.activeElement).toBe(phoneInput)
   })
 
+  it('should use pattern for phone validation', () => {
+    const rules: PhoneRuleDescriptor[] = [
+      { countryISO: 'ABC', countryCode: '1', pattern: '\\d{9}' },
+    ]
+
+    const Component: React.FC = () => {
+      const [phone, setPhone] = useState('+1')
+      const [valid, setValid] = useState(false)
+
+      const handlePhoneChange = ({
+        value,
+        isValid,
+      }: {
+        value: string
+        isValid: boolean
+      }) => {
+        setPhone(value)
+        setValid(isValid)
+      }
+
+      return (
+        <PhoneContextProvider rules={rules}>
+          <PhoneField
+            label="Phone number"
+            value={phone}
+            onChange={handlePhoneChange}
+          />
+          {!valid && <span>Phone is invalid</span>}
+        </PhoneContextProvider>
+      )
+    }
+
+    const { getByRole, queryByText } = render(<Component />)
+
+    const phoneField = getByRole('textbox')
+
+    fireEvent.focus(phoneField)
+
+    fireEvent.change(phoneField, { target: { value: '123 456' } })
+
+    expect(queryByText(/phone is invalid/i)).toBeInTheDocument()
+
+    fireEvent.change(phoneField, { target: { value: '123 456 789' } })
+
+    expect(queryByText(/phone is invalid/i)).not.toBeInTheDocument()
+
+    fireEvent.blur(phoneField)
+
+    expect(phoneField).toHaveValue('123 456 789')
+  })
+
   it('should be able to accept refs in phone field', () => {
     let ref = null
 
@@ -184,6 +236,7 @@ describe('<PhoneField />', () => {
       {
         countryISO: 'ABC',
         countryCode: '1',
+        pattern: '.*',
       },
     ]
 
