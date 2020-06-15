@@ -1,34 +1,21 @@
+import classnames from 'classnames'
 import msk from 'msk'
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import { Input } from 'vtex.styleguide'
+import { Listbox } from 'vtex.checkout-components'
+import { CountryFlag } from 'vtex.country-flags'
 
-import {
+import { usePhoneContext } from './PhoneContext'
+import styles from './PhoneField.css'
+import { PhoneRuleDescriptor } from './rules'
+
+const {
   ListboxInput,
   ListboxButton,
   ListboxPopover,
   ListboxList,
   ListboxOption,
-} from './components/Listbox'
-import flags from './flags'
-import { usePhoneContext } from './PhoneContext'
-import styles from './PhoneField.css'
-import { PhoneRuleDescriptor } from './rules'
-
-const ArrowDownIcon: React.FC<{ size?: number; color?: string }> = ({
-  size = 16,
-  color = 'currentColor',
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-  >
-    <g fill={color}>
-      <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
-    </g>
-  </svg>
-)
+} = Listbox
 
 interface PhoneData {
   value: string
@@ -57,17 +44,28 @@ const renderCountryFlagWithCode = ({
   code,
 }: {
   country: string
-  code: string
+  code?: string
 }) => (
   <>
-    <img
-      src={flags[country] ?? flags.placeholder}
-      width="24"
-      height="24"
-      alt=""
-    />
-    <span className="dib ml3">+{code}</span>
+    <CountryFlag iso3={country} />
+    {code && <span className="dib ml3">+{code}</span>}
   </>
+)
+
+const ArrowDownIcon: React.FC<{ size?: number; color?: string }> = ({
+  size = 16,
+  color = 'currentColor',
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+  >
+    <g fill={color}>
+      <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
+    </g>
+  </svg>
 )
 
 const unmaskPhone = (phone: string) => phone.replace(/\D/g, '')
@@ -80,22 +78,26 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
     const { rules } = usePhoneContext()
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const [inputHovered, setInputHovered] = useState(false)
+    const [inputFocused, setInputFocused] = useState(false)
+    const [hovered, setHovered] = useState(false)
+
     const phoneData = useMemo(() => {
       let phoneValue = value
-      let selectedCountry = defaultCountry
+      let selectedCountry = !value ? defaultCountry : ''
 
       if (value.startsWith('+')) {
-        phoneValue = unmaskPhone(value.substr(1))
+        phoneValue = value.substr(1)
+        const unmaskedPhone = unmaskPhone(phoneValue)
+
         const phoneRule = rules.find(({ countryCode }) => {
-          return phoneValue.startsWith(countryCode)
+          return unmaskedPhone.startsWith(countryCode)
         })
 
-        if (!phoneRule) {
-          throw new Error(`Unsupported phone number ${value}.`)
+        if (phoneRule) {
+          selectedCountry = phoneRule.countryISO
+          phoneValue = phoneValue.substr(phoneRule.countryCode.length)
         }
-
-        selectedCountry = phoneRule.countryISO
-        phoneValue = phoneValue.substr(phoneRule.countryCode.length)
       } else {
         phoneValue = unmaskPhone(value)
       }
@@ -109,20 +111,43 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
           ({ countryISO }) => countryISO === phoneData.selectedCountry
         ),
       [rules, phoneData.selectedCountry]
-    )!
+    )
 
-    const updatePhone = (phone: string, rule: PhoneRuleDescriptor) => {
-      const updatedValue = rule.mask ? msk.fit(phone, rule.mask) : phone
+    const onChangeRef = useRef(onChange)
 
-      onChange({
-        value: `+${rule.countryCode}${unmaskPhone(updatedValue)}`,
-        isValid: !rule.mask || rule.mask.length === updatedValue.length,
-      })
-    }
+    useEffect(() => {
+      onChangeRef.current = onChange
+    }, [onChange])
+
+    const updatePhone = useCallback(
+      (phone: string, rule: PhoneRuleDescriptor) => {
+        const unmaskedValue = `+${rule.countryCode}${unmaskPhone(phone)}`
+
+        onChangeRef.current({
+          value: `+${rule.countryCode}${phone}`,
+          isValid: !!unmaskedValue.match(rule.pattern),
+        })
+      },
+      []
+    )
+
+    useEffect(() => {
+      if (inputFocused || !countryRule || !countryRule.mask) {
+        return
+      }
+
+      const phone = msk(unmaskPhone(phoneData.phoneValue), countryRule.mask)
+
+      updatePhone(phone, countryRule)
+    }, [phoneData.phoneValue, countryRule, inputFocused, updatePhone])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
       target: { value: eventValue },
     }) => {
+      if (!countryRule) {
+        return
+      }
+
       updatePhone(eventValue, countryRule)
     }
 
@@ -137,16 +162,51 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
       setTimeout(() => void inputRef.current?.focus(), 0)
     }
 
+    const handleInputMouseEnter: React.MouseEventHandler<HTMLInputElement> = evt => {
+      setInputHovered(true)
+      props.onMouseEnter?.(evt)
+    }
+
+    const handleInputMouseLeave: React.MouseEventHandler<HTMLInputElement> = evt => {
+      setInputHovered(false)
+      props.onMouseLeave?.(evt)
+    }
+
+    const handleInputFocus: React.FocusEventHandler<HTMLInputElement> = evt => {
+      setInputFocused(true)
+      props.onFocus?.(evt)
+    }
+
+    const handleInputBlur: React.FocusEventHandler<HTMLInputElement> = evt => {
+      setInputFocused(false)
+      props.onBlur?.(evt)
+    }
+
+    const handleMouseEnter = () => {
+      setHovered(true)
+    }
+
+    const handleMouseLeave = () => {
+      setHovered(false)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const hasError = !!(props.error || props.errorMessage)
+
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const inputDisabled = props.disabled || !countryRule
+
     return (
       <div className={styles.phoneField}>
         <Input
           {...props}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onMouseEnter={handleInputMouseEnter}
+          onMouseLeave={handleInputMouseLeave}
+          disabled={inputDisabled}
           inputMode="numeric"
-          value={
-            countryRule.mask
-              ? msk(phoneData.phoneValue, countryRule.mask)
-              : phoneData.phoneValue
-          }
+          value={phoneData.phoneValue}
           onChange={handleChange}
           ref={(node: HTMLInputElement) => {
             if (ref) {
@@ -166,13 +226,25 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
               className="h-100 flex-auto"
               value={phoneData.selectedCountry}
               onChange={handleCountryUpdate}
+              disabled={inputDisabled}
             >
               <ListboxButton
+                className={classnames(styles.listboxButton, 'br bw1 br-2', {
+                  'b--danger': hasError,
+                  'b--muted-4':
+                    !(hovered || inputHovered || inputFocused) && !hasError,
+                  'b--muted-3':
+                    (hovered || inputHovered) && !inputFocused && !hasError,
+                  'b--muted-2': inputFocused && !hasError,
+                })}
+                variation="plain"
                 arrow={
                   <div className="c-action-primary flex items-center ml2">
-                    <ArrowDownIcon size={16} />
+                    <ArrowDownIcon />
                   </div>
                 }
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 {({ label }) =>
                   renderCountryFlagWithCode({
@@ -181,7 +253,10 @@ const PhoneField = React.forwardRef<HTMLInputElement, Props>(
                   })
                 }
               </ListboxButton>
-              <ListboxPopover className="nl1" style={{ minWidth: 192 }}>
+              <ListboxPopover
+                className="nl1"
+                style={{ minWidth: 192, maxHeight: 200 }}
+              >
                 <ListboxList>
                   {rules.map(({ countryCode, countryISO }) => {
                     return (
