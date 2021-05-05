@@ -25,7 +25,7 @@ interface PhoneData {
 interface Props
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
-    'onChange' | 'value'
+    'onChange' | 'value' | 'size'
   > {
   onChange?: (data: PhoneData) => void
   value?: string
