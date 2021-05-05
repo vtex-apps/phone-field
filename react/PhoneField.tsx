@@ -36,6 +36,7 @@ interface Props
   errorMessage?: string
   helpText?: React.ReactNode
   suffix?: React.ReactNode
+  size: 'small' | 'regular' | 'large'
   isLoadingButton?: boolean
 }
 
