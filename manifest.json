@@ -1,7 +1,7 @@
 {
   "vendor": "vtex",
   "name": "phone-field",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "title": "Phone field component",
   "description": "UI component responsible for rendering a phone field with a dropdown",
   "builders": {
